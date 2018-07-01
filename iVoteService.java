@@ -1,29 +1,18 @@
+import java.awt.List;
+import java.util.ArrayList;
 
 public class iVoteService {
 	
 	iVoteService(){
+		//answers = new String[100];
 		this.current=0;
 	}//constructor for initialization
-	//=================================================================
-	public Question setQuestionType(Question question, char reply) {
-		if(reply == 'y')
-		{
-		SingleChoice x = null;
-		question = x;
-		}
-		else
-		{
-			MultipleChoice y = null;
-			question = y;
-		}
-		return question;
-		
-	}//returns the correct subclass
-	//===================================================================
+	
+
 	public void SubmitAnswer(Student s) {
-		answers[current] = s.getAnswer();
+		answers.add(s.getAnswer());
 	}
-	//===================================================================
+	
 	public void OutputStats(Question q) {
 		int y = 0;
 		while(q.numAns()>y) {
@@ -31,7 +20,7 @@ public class iVoteService {
 		String output = q.getAnswer();
 		
 		for(int x = 0;x<this.current;++x) {
-			if(answers[x] == output)
+			if(answers.get(x) == output)
 				++counter;
 		}
 		
@@ -40,14 +29,14 @@ public class iVoteService {
 		System.out.print(counter);
 	}
 	}
-	//===================================================================
+
 	
 	public void setQuestion(Question qType, String question) {
 		qType.setQ(question);
 	}
 	
 
-	
-	private String[] answers;
+	 ArrayList<String> answers = new ArrayList<String>();
+	//private String[] answers = new String[100];
 	private int current;
 }

@@ -1,51 +1,77 @@
-public class MultipleChoice implements Question {
 
-	public MultipleChoice() {
-		int[] choices = {0};
-		boolean answer[] = {false};
-		numAns = 0;
-		x = 0;
+public class MultipleChoice implements Question{
+	
+// ==== Constructor ===========================================================
+	MultipleChoice(){
+		myChoices = new String[100];
+		numChoices = 0;
 	}
+//=============================================================================
+
+// ==== setQ ==================================================================
+	//input: arg1 - receives a string from the user, sets it as the question
 	public void setQ(String question) {
-			//sets the private data member question
-			this.question = question;	
+		this.myQ = question;
 	}
-	
-	public void setA(String answer) {
-		//sets the private data member answer
-		//make sure argument is in scope
-		this.answers[numAns++] = answer;
-	}
-	
-	public void submit(int input) {
-		//allows for many answer inputs
-		++choices[input];		
-}
+// ============================================================================
 
-	public int numAns() {
-		return numAns;
+// ==== getAns ================================================================
+	public String[] getAns(){
+		return myChoices;
 	}
+// ============================================================================
 	
-	public String getAnswer() {
-		return answers[x++];
+// ==== getNumAns =============================================================
+	public int getNumAns() {
+		return this.numChoices;
 	}
-
-	private String question;
-	private String[] answers; 
-	private int numAns;
-	private int x;
+// ============================================================================
 	
-  
-  
-  
-  @Override
-	public void submit() {
-		// TODO Auto-generated method stub
+// ==== dispQ =================================================================	
+	public void dispQ() {
+		System.out.println(myQ);
+	}
+// ============================================================================
+	
+// ==== addChoice =============================================================
+	public void addChoice(String ans) {
+		this.myChoices[this.numChoices] = ans.intern();
+		++numChoices;
+	}
+// ============================================================================
+	
+// ==== addChoice =============================================================
+	public boolean addChoice() {
+		return true;
+	}
+// ============================================================================
+	
+// ==== dispResult ============================================================	
+	public void dispResult(Student[] s) {
+		String[] answers = this.getAns();
+		int counter = 0;
 		
+		this.dispQ();
+		for(int i = 0;i<this.getNumAns();++i) {
+			System.out.print(answers[i]);
+			System.out.print(": ");
+			counter = 0;
+			for(int x = 0; x<s.length;++x) {
+				String sAnswer = s[x].getAnswer();
+				String oAnswer = answers[i];
+				
+				if(sAnswer.intern() == oAnswer.intern()) {
+					++counter;
+				}
+			}
+			System.out.print(counter);
+			System.out.print("\n");
+		}	
 	}
-	@Override
-	public int numChoices() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+// ============================================================================
+	
+// ==== Data Variables ========================================================
+	private String myQ;
+	private String[] myChoices;
+	private int numChoices;
 }

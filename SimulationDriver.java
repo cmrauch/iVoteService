@@ -1,87 +1,55 @@
+// ==== Main ==================================================================
+//
+// ============================================================================
+
 import java.util.Scanner;
 public class SimulationDriver {
 
 	public static void main(String args[]) {
 		
-		Scanner cin = new Scanner(System.in);
+		//data declarations
+		Scanner reader = new Scanner(System.in);
 		iVoteService vote = new iVoteService();
-		String question = "hello";
-		String reply = "y";
-		boolean addChoice=false;
+		Question q;//abstract type
+		String input;
+		String add;
 		
-		//set the poll 
-		System.out.println("Create a poll by entering your question\n");
-		question = cin.next();
-		System.out.println("Will you allow free response answers (y/n)? ");
-	        reply = cin.next();
-	    
-	    //use the correct subclass 
-	    //instantiate a SingleChoice class if the user entered yes
-	    if(reply == "y") {
-	    	SingleChoice q = new SingleChoice();
-		    
-	    	//receive input from user and set the question
-	    	q.setQ(question);
-	    }
-	    else if(reply =="n") {
-	    	MultipleChoice q = new MultipleChoice();
-	    	q.setQ(question);
-		    
-		//add possible answers
-		//they are to be stored in an array
-	    	do {
-	    		System.out.println("Possible Answer: ");
-	    		cin.next(question);
-	    		q.setA(question);
-	    		//----------------------------------------------------
-	    		System.out.println("Add Choice (y/n): ");
-	    		cin.next(question);
-	    		if(question=="y") {
-	    			addChoice = true;
-	    		}
-	    		else {
-	    			addChoice = false;
-	    		}
-	    		}while(addChoice);
-	    	
-	    }
-	   
-		//generate some students
-    	Student[] students = new Student[30];
-    	
-    	//submit answers to iVote Service
-    	for(int x = 0; x<30; ++x) {
-			vote.SubmitAnswer(students[x]);
+		//prompt the user
+		System.out.println("Allow multiple inputs? ");
+		input = reader.next();
+		q = vote.chooseType(input);
+		System.out.println("What is the question? ");//promt user for question
+		reader.nextLine();
+		input = reader.nextLine();
+		vote.setQuestion(q,input);
+
+		
+		//if the question is multiple choice then prompt the user for multiple submissions
+		//otherwise this step is skipped
+		if(vote.multipleChoice(q)) {
+	    	//loop to receive multiple user inputs
+			do {
+				System.out.println("Add Choice ");//promt user for input
+				input = reader.nextLine();
+				vote.candidateAnswers(q,input);
+				System.out.println("Add Choice? (yes/no) ");//promt user for input
+				add = reader.next();
+				reader.nextLine();
+			}while(vote.addChoice(add));		
 		}
-    	
-    	//display stats
-    	vote.OutputStats(q);
-		
-    	
-    	
-    	
-    	
-    	
-    	
-    	
-  /*  	
-    	q = vote.setQuestionType(q,reply); // q is now set to the appropriate sub class
-		q.setQ(question);
-		
-		configure the answers if necessary
 		
 		
+		//generate the students and randomize answers/id's
+		System.out.println("Generating Students and Answers.... ");
+		Student s[] = new Student[100];
+		for(int i=0;i<s.length;++i) 
+			s[i] = new Student(vote.getCandidateAnswers(q),q.getNumAns());
 		
-		generate some students
-		Student[] students = new Student[30];
 		
+		//display the results
+		vote.displayResults(q,s); 
 		
-		submit answers to iVote Service
-		for(int x = 0; x<30; ++x) {
-			vote.SubmitAnswer(students[x]);
-		}
-*/		
-		//call iVote Service output to display results
-		//vote.OutputStats(q);
+		reader.close();
+	}//end of main
 }
-}
+
